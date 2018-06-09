@@ -1,7 +1,13 @@
+ThreadRunOnce powerChangeThread = ThreadRunOnce();
+
 decode_results ir_results;
 
 void setup_Listener() {
-  //
+  attachInterrupt(PWR_LED_IN, handle_pwr_change, CHANGE);
+  handle_pwr_change();
+
+  powerChangeThread.onRun(powerChangeThreadFunction);
+  threadControl.add(&powerChangeThread);
 }
 
 void loop_Listener() {
@@ -48,5 +54,21 @@ void loop_Listener() {
     // Receive the next value
     irrecv.resume();
   }
+}
+
+void handle_pwr_change() {
+  bool tmp = digitalRead(PWR_LED_IN);
+  LogVolume.info(s+"handle_pwr_change "+power);
+
+  if (tmp && !power) {
+    powerChangeThread.setRunOnce(8000);
+  } else {
+    power = false;
+    publishHifi();
+  }
+}
+void powerChangeThreadFunction() {
+  power = true;
+  publishHifi();
 }
 

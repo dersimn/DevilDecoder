@@ -8,7 +8,7 @@ void initDefault() {
     threadControl.add(&initDefault_Channel_Thread);
 
     // Takes 8sec to boot up
-    initDefault_Channel_Thread.setRunOnce(9000);
+    initDefault_Channel_Thread.setRunOnce(8000);
   } else if (DEFAULT_PWR && digitalRead(PWR_LED_IN)) {
     initDefault_Channel_function();
   }

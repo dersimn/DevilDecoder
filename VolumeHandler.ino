@@ -1,9 +1,6 @@
 ThreadRunOnce publishThread = ThreadRunOnce();
 
 void setup_VolumeHandler() {
-  attachInterrupt(PWR_LED_IN, handle_pwr_change, CHANGE);
-  handle_pwr_change();
-  
   publishThread.onRun(publishHifi);
   threadControl.add(&publishThread);
 
@@ -70,9 +67,3 @@ void pwr_set(bool val) {
   }
 }
 
-void handle_pwr_change() {
-  power = digitalRead(PWR_LED_IN);
-  LogVolume.info(s+"handle_pwr_change "+power);
-
-  publishHifi();
-}
