@@ -22,9 +22,31 @@ void loop_IRrecv() {
     }
 
     // Everything else
-    LogIRrecv.info(s+"Decoded "+typeToString(ir_results.decode_type, false)+" "+uint64ToString(ir_results.value, 16)+" "+ir_results.repeat);    
-    
-    irrecv.resume();  // Receive the next value
+    LogIRrecv.info(s+"Decoded "+typeToString(ir_results.decode_type, false)+" "+uint64ToString(ir_results.value, 16)+" "+ir_results.repeat);
+
+    // Publish
+    String output;
+    static uint64_t val;
+    static int repeat = 0;
+    DynamicJsonBuffer jsonBuffer;
+
+    if (!ir_results.repeat) {
+      val = ir_results.value;
+      repeat = 0;
+    } else {
+      repeat++;
+    }
+  
+    JsonObject& root = jsonBuffer.createObject();
+    root["val"] = uint64ToString(val, 16);
+    root["codec"] = typeToString(ir_results.decode_type, false);
+    root["repeat"] = repeat;
+  
+    root.printTo(output);
+    mqtt.publish(s+MQTT_PREFIX+"/status/"+BOARD_ID+"/ir", output, true);
+
+    // Receive the next value
+    irrecv.resume();
   }
 }
 
