@@ -1,10 +1,10 @@
 decode_results ir_results;
 
-void setup_IRrecv() {
+void setup_Listener() {
   //
 }
 
-void loop_IRrecv() {
+void loop_Listener() {
   if (irrecv.decode(&ir_results)) {
     // Decoderstation uses NEC Codec
     if (ir_results.decode_type == NEC) {

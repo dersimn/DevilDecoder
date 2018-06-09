@@ -75,7 +75,7 @@ void setup() {
   setup_MQTT();
   setup_ArduinoOTA();
 
-  setup_IRrecv();
+  setup_Listener();
   setup_VolumeHandler();
 
   setup_Maintanance();
@@ -95,7 +95,7 @@ void loop() {
   }
   
   loop_MQTT();
-  loop_IRrecv();
+  loop_Listener();
   loop_ArduinoOTA();
 
   threadControl.run();
