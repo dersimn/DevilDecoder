@@ -55,7 +55,8 @@ const String BOARD_ID = String("DevilDecoderRemote_")+ESP_ID;
 char   BOARD_ID_CHAR[50];
 String s = "";
 
-bool power = false;
+bool power = true;
+bool booting = false;
 channels_t current_channel = DEFAULT_CHN; 
 
 void setup() {

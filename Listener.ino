@@ -13,7 +13,7 @@ void setup_Listener() {
 void loop_Listener() {
   if (irrecv.decode(&ir_results)) {
     // Decoderstation uses NEC Codec
-    if (ir_results.decode_type == NEC) {
+    if (power && ir_results.decode_type == NEC) {
       switch (ir_results.value) {
         case IR_TEUFEL_CHANNEL_51:      current_channel = _51;   break;
         case IR_TEUFEL_CHANNEL_OPT1:    current_channel = OPT1;  break;
@@ -62,13 +62,15 @@ void handle_pwr_change() {
 
   if (tmp && !power) {
     powerChangeThread.setRunOnce(8000);
+    booting = true;
   } else {
-    power = false;
-    publishHifi();
+    power = tmp;
   }
+  publishHifi();
 }
 void powerChangeThreadFunction() {
   power = true;
+  booting = false;
   publishHifi();
 }
 
