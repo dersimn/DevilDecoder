@@ -60,6 +60,7 @@ void publishHifi() {
   root["val"] = power;
   root["booting"] = booting;
   root["channel"] = TEUFEL_CHANNELS_STRING[current_channel];
+  root["display"] = (bool)digitalRead(DISP_LED_IN);
 
   root.printTo(output);
   mqtt.publish(s+MQTT_PREFIX+"/status/"+BOARD_ID+"/hifi", output, true);
