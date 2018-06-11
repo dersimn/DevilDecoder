@@ -70,7 +70,10 @@ void setup() {
   // Init Submodules
   irsend.begin();
   irrecv.enableIRIn();
-  pinMode(PWR_LED_IN, INPUT);
+  pinMode(PWR_LED_IN,  INPUT);
+  pinMode(DISP_LED_IN, INPUT);
+  pinMode(I2C_SCL,     INPUT);
+  pinMode(I2C_SDA,     INPUT);
 
   setup_WiFi();
   setup_MQTT();
