@@ -51,7 +51,7 @@ IRsend irsend(IR_OUT, false, false); // Do not modulate the signal
 IRrecv irrecv(IR_IN);
 
 const String ESP_ID = upperCaseStr(String(ESP.getChipId(), HEX));
-const String BOARD_ID = String("DevilDecoderRemote_")+ESP_ID;
+const String BOARD_ID = String("DevilDecoder_")+ESP_ID;
 char   BOARD_ID_CHAR[50];
 String s = "";
 
@@ -64,7 +64,7 @@ void setup() {
   
   Serial.begin(115200);
   logHandler.addModule(&serialModule);
-  Log.info("Initializing 'DevilDecoderRemote'");
+  Log.info("Initializing 'DevilDecoder'");
   Log.info( String("ESP ID: ") + ESP_ID );
 
   // Init Submodules
