@@ -24,6 +24,17 @@ void hifi_subscribe(String topic, String message) {
     if ( rootObject.containsKey("val") ) {
       pwr_set( rootObject["val"].as<bool>() );
     }
+    if ( rootObject.containsKey("channel") ) {
+      String tmp = rootObject["channel"].as<String>();
+      if (tmp == TEUFEL_CHANNELS_STRING[_51])   channel_set(_51);
+      if (tmp == TEUFEL_CHANNELS_STRING[OPT1])  channel_set(OPT1);
+      if (tmp == TEUFEL_CHANNELS_STRING[OPT2])  channel_set(OPT2);
+      if (tmp == TEUFEL_CHANNELS_STRING[COAX1]) channel_set(COAX1);
+      if (tmp == TEUFEL_CHANNELS_STRING[COAX2]) channel_set(COAX2);
+      if (tmp == TEUFEL_CHANNELS_STRING[TV])    channel_set(TV);
+      if (tmp == TEUFEL_CHANNELS_STRING[CD])    channel_set(CD);
+      if (tmp == TEUFEL_CHANNELS_STRING[AUX])   channel_set(AUX);
+    }
   }
 }
 void volume_subscribe(String topic, String message) {
@@ -68,12 +79,14 @@ void pwr_set(bool val) {
   }
 }
 void channel_set(channels_t val) {
-  if (val == _51)   irsend.sendNEC(IR_TEUFEL_CHANNEL_51,    32);
-  if (val == OPT1)  irsend.sendNEC(IR_TEUFEL_CHANNEL_OPT1,  32);
-  if (val == OPT2)  irsend.sendNEC(IR_TEUFEL_CHANNEL_OPT2,  32);
-  if (val == COAX1) irsend.sendNEC(IR_TEUFEL_CHANNEL_COAX1, 32);
-  if (val == COAX2) irsend.sendNEC(IR_TEUFEL_CHANNEL_COAX2, 32);
-  if (val == TV)    irsend.sendNEC(IR_TEUFEL_CHANNEL_TV,    32);
-  if (val == CD)    irsend.sendNEC(IR_TEUFEL_CHANNEL_CD,    32);
-  if (val == AUX)   irsend.sendNEC(IR_TEUFEL_CHANNEL_AUX,   32);
+  if (power) {
+    if (val == _51)   irsend.sendNEC(IR_TEUFEL_CHANNEL_51,    32);
+    if (val == OPT1)  irsend.sendNEC(IR_TEUFEL_CHANNEL_OPT1,  32);
+    if (val == OPT2)  irsend.sendNEC(IR_TEUFEL_CHANNEL_OPT2,  32);
+    if (val == COAX1) irsend.sendNEC(IR_TEUFEL_CHANNEL_COAX1, 32);
+    if (val == COAX2) irsend.sendNEC(IR_TEUFEL_CHANNEL_COAX2, 32);
+    if (val == TV)    irsend.sendNEC(IR_TEUFEL_CHANNEL_TV,    32);
+    if (val == CD)    irsend.sendNEC(IR_TEUFEL_CHANNEL_CD,    32);
+    if (val == AUX)   irsend.sendNEC(IR_TEUFEL_CHANNEL_AUX,   32); 
+  }
 }
