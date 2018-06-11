@@ -5,10 +5,16 @@ void setup_WiFi() {
   LogWiFi.info(s+"Connecting to Wifi SSID: "+WIFI_SSID);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
 
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
+  for (int i = 0; i < 10; i++) {
+    if (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+    }
   }
-  LogWiFi.info(s+"Connected with IP: "+WiFi.localIP().toString() );
+  if (WiFi.status() == WL_CONNECTED) {
+    Log.info(String("Connected with IP: ") + WiFi.localIP().toString() );
+  } else {
+    Log.warn("Could NOT connect to WiFi");
+  }
 
   wifiThread.onRun(wifiFunction);
   wifiThread.setInterval(60 * 1000);
