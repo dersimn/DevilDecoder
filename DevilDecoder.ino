@@ -81,8 +81,9 @@ void setup() {
   setup_volumeReader();
 
   setup_WiFi();
+  ArduinoOTA.setHostname(BOARD_ID_CHAR);
+  ArduinoOTA.begin();
   setup_MQTT();
-  setup_ArduinoOTA();
 
   setup_Listener();
   setup_VolumeHandler();
@@ -105,7 +106,7 @@ void loop() {
   
   loop_MQTT();
   loop_Listener();
-  loop_ArduinoOTA();
-
+  
+  ArduinoOTA.handle();
   threadControl.run();
 }
