@@ -85,7 +85,7 @@ void setup() {
   ArduinoOTA.begin();
   setup_MQTT();
 
-  setup_Listener();
+  setup_InputReader();
   setup_VolumeHandler();
 
   setup_Maintanance();
@@ -105,7 +105,7 @@ void loop() {
   }
   
   loop_MQTT();
-  loop_Listener();
+  loop_IrReader();
   
   ArduinoOTA.handle();
   threadControl.run();
