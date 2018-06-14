@@ -4,6 +4,7 @@ decode_results ir_results;
 
 void setup_Listener() {
   attachInterrupt(PWR_LED_IN, handle_pwr_change, CHANGE);
+  attachInterrupt(DISP_LED_IN, handle_display_change, CHANGE);
   handle_pwr_change();
 
   powerChangeThread.onRun(powerChangeThreadFunction);
@@ -67,6 +68,9 @@ void handle_pwr_change() {
     power = tmp;
   }
   publishHifi();
+}
+void handle_display_change() {
+  //
 }
 void powerChangeThreadFunction() {
   power = true;

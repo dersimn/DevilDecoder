@@ -57,7 +57,10 @@ String s = "";
 
 bool power = true;
 bool booting = false;
-channels_t current_channel = DEFAULT_CHN; 
+channels_t current_channel = DEFAULT_CHN;
+
+int8_t realVolume_channel[] = {-127,-127,-127,-127,-127,-127,-127};
+bool   realVolume_mute      = false;
 
 void setup() {
   BOARD_ID.toCharArray(BOARD_ID_CHAR, 50);
@@ -70,10 +73,12 @@ void setup() {
   // Init Submodules
   irsend.begin();
   irrecv.enableIRIn();
-  pinMode(PWR_LED_IN,  INPUT);
-  pinMode(DISP_LED_IN, INPUT);
-  pinMode(I2C_SCL,     INPUT);
-  pinMode(I2C_SDA,     INPUT);
+  pinMode(PWR_LED_IN,   INPUT);
+  pinMode(DISP_LED_IN,  INPUT);
+  pinMode(READ_I2C_SCL, INPUT);
+  pinMode(READ_I2C_SCL, INPUT);
+
+  setup_volumeReader();
 
   setup_WiFi();
   setup_MQTT();

@@ -59,8 +59,16 @@ void publishHifi() {
   JsonObject& root = jsonBuffer.createObject();
   root["val"] = power;
   root["booting"] = booting;
-  root["channel"] = TEUFEL_CHANNELS_STRING[current_channel];
+  root["input"] = TEUFEL_CHANNELS_STRING[current_channel];
   root["display"] = (bool)digitalRead(DISP_LED_IN);
+
+  root["volMute"] = realVolume_mute;
+  root["volFL"] = realVolume_channel[1];
+  root["volFR"] = realVolume_channel[2];
+  root["volC"] = realVolume_channel[3];
+  root["volSUB"] = realVolume_channel[4];
+  root["volRL"] = realVolume_channel[5];
+  root["volRR"] = realVolume_channel[6];
 
   root.printTo(output);
   mqtt.publish(s+MQTT_PREFIX+"/status/"+BOARD_ID+"/hifi", output, true);

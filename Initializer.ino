@@ -16,5 +16,11 @@ void initDefault() {
 
 void initDefault_Channel_function() {
   channel_set(DEFAULT_CHN);
+
+  if (power) {
+    if (DEFAULT_DISPLAY != digitalRead(DISP_LED_IN)) {
+      irsend.sendNEC(IR_TEUFEL_DISPLAYONOFF, 32);
+    }
+  }
 }
 
