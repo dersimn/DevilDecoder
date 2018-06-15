@@ -3,13 +3,14 @@
 #define WIFI_PASS       ""
 #define MQTT_PREFIX     "dersimn"
 
-// Volume Config
+// I/O Config
 #define PWR_LED_IN       D5
 #define DISP_LED_IN      D1
 #define IR_IN            D6
 #define IR_OUT           D0
 #define READ_I2C_SCL     D2
 #define READ_I2C_SDA     D7
+// Defaults
 #define DEFAULT_CHN      OPT1
 #define DEFAULT_PWR      true
 #define DISPLAY_AUTOOFF  15000
