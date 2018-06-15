@@ -10,10 +10,6 @@ void setup_MQTT() {
   threadControl.add(&reconnectThread);
 }
 
-void loop_MQTT() {
-  mqttClient.loop();
-}
-
 void reconnectFunction() {
   if (!mqttClient.connected()) {
     LogMqtt.warn("Connection lost");

@@ -5,16 +5,21 @@ void loop_IrReader() {
     // Decoderstation uses NEC Codec
     if (power && ir_results.decode_type == NEC) {
       switch (ir_results.value) {
-        case IR_TEUFEL_CHANNEL_51:      current_channel = _51;   break;
-        case IR_TEUFEL_CHANNEL_OPT1:    current_channel = OPT1;  break;
-        case IR_TEUFEL_CHANNEL_OPT2:    current_channel = OPT2;  break;
-        case IR_TEUFEL_CHANNEL_COAX1:   current_channel = COAX1; break;
-        case IR_TEUFEL_CHANNEL_COAX2:   current_channel = COAX2; break;
-        case IR_TEUFEL_CHANNEL_TV:      current_channel = TV;    break;
-        case IR_TEUFEL_CHANNEL_CD:      current_channel = CD;    break;
-        case IR_TEUFEL_CHANNEL_AUX:     current_channel = AUX;   break;
+        case IR_TEUFEL_CHANNEL_51:      currentInputChannel = _51;   currentInputChannel_valid = true; break;
+        case IR_TEUFEL_CHANNEL_OPT1:    currentInputChannel = OPT1;  currentInputChannel_valid = true; break;
+        case IR_TEUFEL_CHANNEL_OPT2:    currentInputChannel = OPT2;  currentInputChannel_valid = true; break;
+        case IR_TEUFEL_CHANNEL_COAX1:   currentInputChannel = COAX1; currentInputChannel_valid = true; break;
+        case IR_TEUFEL_CHANNEL_COAX2:   currentInputChannel = COAX2; currentInputChannel_valid = true; break;
+        case IR_TEUFEL_CHANNEL_TV:      currentInputChannel = TV;    currentInputChannel_valid = true; break;
+        case IR_TEUFEL_CHANNEL_CD:      currentInputChannel = CD;    currentInputChannel_valid = true; break;
+        case IR_TEUFEL_CHANNEL_AUX:     currentInputChannel = AUX;   currentInputChannel_valid = true; break;
       }
-      publishHifi();
+
+      // Display Auto-Off
+      displayAutoOff_postpone();
+
+      // Update MQTT
+      publishInputChannel();
     }
 
     // Everything else
@@ -39,7 +44,7 @@ void loop_IrReader() {
     root["repeat"] = repeat;
   
     root.printTo(output);
-    mqtt.publish(s+MQTT_PREFIX+"/status/"+BOARD_ID+"/ir", output, true);
+    mqtt.publish(s+MQTT_PREFIX+"/status/"+BOARD_ID+"/ir", output, false);
 
     // Receive the next value
     irrecv.resume();

@@ -24,6 +24,9 @@ void uptimePublisher() {
 }
 
 void infoPublisher() {
-  publishHifi();
+  publishPowerState();
+  publishDisplayState();
+  publishInputChannel();
+  publishVolume();
 }
 

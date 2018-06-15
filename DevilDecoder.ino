@@ -38,7 +38,6 @@ GenericLog Log    (logHandler);
 NamedLog   LogWiFi(logHandler, "WiFi");
 NamedLog   LogMqtt(logHandler, "MQTT");
 NamedLog   LogDallas(logHandler, "Dallas");
-NamedLog   LogVolume(logHandler, "Volume");
 NamedLog   LogIRrecv(logHandler, "IRrecv");
 
 ThreadController threadControl = ThreadController();
@@ -55,12 +54,16 @@ const String BOARD_ID = String("DevilDecoder_")+ESP_ID;
 char   BOARD_ID_CHAR[50];
 String s = "";
 
-bool power = true;
+bool power = false;
 bool booting = false;
-channels_t current_channel = DEFAULT_CHN;
 
-int8_t realVolume_channel[] = {-127,-127,-127,-127,-127,-127,-127};
-bool   realVolume_mute      = false;
+channels_t currentInputChannel       = DEFAULT_CHN;
+bool       currentInputChannel_valid = false;
+
+int8_t realVolume_channel[]       = {-127,-127,-127,-127,-127,-127,-127};
+bool   realVolume_mute            = false;
+bool   realVolume_channel_valid[] = {false,false,false,false,false,false,false};
+bool   realVolume_mute_valid      = false;
 
 void setup() {
   BOARD_ID.toCharArray(BOARD_ID_CHAR, 50);
@@ -78,15 +81,21 @@ void setup() {
   pinMode(READ_I2C_SCL, INPUT);
   pinMode(READ_I2C_SCL, INPUT);
 
-  setup_volumeReader();
+  // Init Power state
+  power = digitalRead(PWR_LED_IN);
 
+  // I/O functions
+  setup_volumeReader();
+  setup_InputReader();
+
+  // Wifi related functions
   setup_WiFi();
   ArduinoOTA.setHostname(BOARD_ID_CHAR);
   ArduinoOTA.begin();
   setup_MQTT();
 
-  setup_InputReader();
-  setup_VolumeHandler();
+  // MQTT related functions  
+  setup_MessageHandler();
 
   setup_Maintanance();
   setup_Sensor_Dallas();
@@ -104,9 +113,9 @@ void loop() {
     initDefault();
   }
   
-  loop_MQTT();
   loop_IrReader();
-  
+
+  mqttClient.loop();
   ArduinoOTA.handle();
   threadControl.run();
 }

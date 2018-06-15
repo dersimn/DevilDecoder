@@ -1,17 +1,20 @@
 ThreadRunOnce powerChangeThread = ThreadRunOnce();
+ThreadRunOnce displayAutoOffThread = ThreadRunOnce();
 
 void setup_InputReader() {
   attachInterrupt(PWR_LED_IN, handle_pwr_change, CHANGE);
+  attachInterrupt(DISP_LED_IN, displayAutoOff_postpone, RISING);
   attachInterrupt(DISP_LED_IN, handle_display_change, CHANGE);
   handle_pwr_change();
 
   powerChangeThread.onRun(powerChangeThreadFunction);
+  displayAutoOffThread.onRun(displayAutoOffThreadFunction);
   threadControl.add(&powerChangeThread);
+  threadControl.add(&displayAutoOffThread);
 }
 
 void handle_pwr_change() {
   bool tmp = digitalRead(PWR_LED_IN);
-  LogVolume.info(s+"handle_pwr_change "+power);
 
   if (tmp && !power) {
     powerChangeThread.setRunOnce(8000);
@@ -19,15 +22,25 @@ void handle_pwr_change() {
   } else {
     power = tmp;
   }
-  publishHifi();
+  publishPowerState();
+}
+void handle_display_change() {
+  publishDisplayState();
 }
 
-void handle_display_change() {
-  //
+void displayAutoOff_postpone() {  
+  // Auto-Off Display
+  if (DISPLAY_AUTOOFF) {
+    displayAutoOffThread.setRunOnce(DISPLAY_AUTOOFF); 
+  }
 }
 
 void powerChangeThreadFunction() {
   power = true;
   booting = false;
-  publishHifi();
+  publishPowerState();
 }
+void displayAutoOffThreadFunction() {
+  irWrite_Display(false);
+}
+

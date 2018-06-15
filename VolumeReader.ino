@@ -79,10 +79,12 @@ void volumeReaderThreadFunction(){
       for (int j = 0; j <= 6; j++) {
         if (chan_exists[j] == 2) {
           realVolume_channel[j] = chan[j] +10;
+          realVolume_channel_valid[j] = true;
         }
       }
       if (mute_exists) {
         realVolume_mute = mute;
+        realVolume_mute_valid = true;
       }
 
       // Clear the buffer that was covered by this for loop
@@ -93,11 +95,13 @@ void volumeReaderThreadFunction(){
   // Reset Write Pointer
   read_i2c_cmd_pointer = -1;
 
+  /*
   Serial.print(realVolume_mute, BIN);
   for (int k = 0; k < 7; k++) {
     Serial.print(realVolume_channel[k], DEC); Serial.print(" ");
   }
   Serial.println();
+  */
   
-  publishHifi();
+  publishVolume();
 }
