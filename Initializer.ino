@@ -19,7 +19,9 @@ void initDefault_PowerOnFunction() {
 
   delay(50);
 
-  // This reads current volume on boot
-  irWrite_VolumeDiff(-2);
+  // Reads current volume on boot
+  irsend.sendNEC(IR_TEUFEL_VOL_DOWN, 32, 1); // Activates Volume display
+  irsend.sendNEC(IR_TEUFEL_VOL_DOWN, 32, 1); // -1
+  irsend.sendNEC(IR_TEUFEL_VOL_UP,   32, 1); // +1
 }
 
