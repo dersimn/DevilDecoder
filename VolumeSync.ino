@@ -16,19 +16,21 @@ void syncVolume(int8_t volume) {
 }
 
 void syncVolumeThreadFunction() {
-  if (power) {
-    Log.info(s+"Sync Diff "+(targetVolume - realVolume_reference));
+  if (power && realVolume_channel_valid[REFERENCE_CHANNEL]) {
+    Log.info(s+"Sync Diff "+(targetVolume - realVolume_channel[REFERENCE_CHANNEL]));
     
-    if ( targetVolume == realVolume_reference ) {
+    if ( targetVolume == realVolume_channel[REFERENCE_CHANNEL] ) {
       syncVolumeThread.enabled = false;
       return;
     }
   
-    if ( targetVolume > realVolume_reference ) {
+    if ( targetVolume > realVolume_channel[REFERENCE_CHANNEL] ) {
       irsend.sendNEC(IR_TEUFEL_VOL_UP, 32, 1);
-    } else if ( targetVolume < realVolume_reference ) {
+    } else if ( targetVolume < realVolume_channel[REFERENCE_CHANNEL] ) {
       irsend.sendNEC(IR_TEUFEL_VOL_DOWN, 32, 1);
     }
+  } else {
+    syncVolumeThread.enabled = false;
   }
 }
 

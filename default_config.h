@@ -11,15 +11,16 @@
 #define READ_I2C_SCL     D2
 #define READ_I2C_SDA     D7
 // Defaults
-#define DEFAULT_CHN      OPT1
-#define DEFAULT_PWR      true
-#define DISPLAY_AUTOOFF  15000
+#define DEFAULT_CHN       OPT1
+#define DEFAULT_PWR       true
+#define DISPLAY_AUTOOFF   15000
+#define REFERENCE_CHANNEL 1
 
 // Maintenance
-#define MAINTENANCE_UPTIME_INTERVAL     10
-#define MAINTENANCE_INFO_INTERVAL       10
+#define MAINTENANCE_UPTIME_INTERVAL     60
+#define MAINTENANCE_INFO_INTERVAL       60
 
 // Sensor_Dallas
-#define DS_ONE_WIRE_BUS       D8
+#define DS_ONE_WIRE_BUS       D4
 #define DS_INTERVAL           60000
 #define DS_PRECISION          10

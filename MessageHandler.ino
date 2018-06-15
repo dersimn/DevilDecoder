@@ -31,11 +31,11 @@ void hifi_subscribe(String topic, String message) {
       irWrite_Display( rootObject["display"].as<bool>() );
     }
     if ( rootObject.containsKey("volume") ) {
-      float volume_float = rootObject["volume"].as<float>();
-      int8_t volume_int = rescaleOffsetReference(volume_float, 0.0, 1.0, 0.0, -53, 10);
-      if ( inRange( volume_int, -53, 10) ) {
-        Log.info(s+"Sync to "+volume_int);
-        syncVolume(volume_int);
+      if (power) {
+        int8_t volume_int = rootObject["volume"].as<int>();
+        if ( inRange( volume_int, -53, 10) ) {
+          syncVolume(volume_int);
+        }
       }
     }
   }
@@ -90,12 +90,12 @@ void publishInputChannel() {
   }
 }
 void publishVolume() {
-  if (realVolume_reference_valid) {
+  if (realVolume_channel_valid[REFERENCE_CHANNEL]) {
     String output;
     DynamicJsonBuffer jsonBuffer;
     JsonObject& root = jsonBuffer.createObject();
     
-    root["val"] = rescaleOffsetReference(realVolume_reference, -53, 10, -53, 0.0, 1.0);
+    root["val"] = realVolume_channel[REFERENCE_CHANNEL];
     
     if (realVolume_mute_valid) {
       root["muted"] = realVolume_mute;
