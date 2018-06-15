@@ -24,8 +24,10 @@ void irWrite_InputChannel(channels_t val) {
   }
 }
 void irWrite_Display(bool poweron) {
-  if (poweron != digitalRead(DISP_LED_IN)) {
-    irsend.sendNEC(IR_TEUFEL_DISPLAYONOFF, 32);
+  if (power) {
+    if (poweron != digitalRead(DISP_LED_IN)) {
+      irsend.sendNEC(IR_TEUFEL_DISPLAYONOFF, 32);
+    }
   }
 }
 

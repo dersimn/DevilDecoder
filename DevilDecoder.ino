@@ -60,6 +60,8 @@ bool booting = false;
 channels_t currentInputChannel       = DEFAULT_CHN;
 bool       currentInputChannel_valid = false;
 
+int8_t realVolume_reference       = -127;
+bool   realVolume_reference_valid = false;
 int8_t realVolume_channel[]       = {-127,-127,-127,-127,-127,-127,-127};
 bool   realVolume_mute            = false;
 bool   realVolume_channel_valid[] = {false,false,false,false,false,false,false};
@@ -94,7 +96,8 @@ void setup() {
   ArduinoOTA.begin();
   setup_MQTT();
 
-  // MQTT related functions  
+  // MQTT related functions
+  setup_VolumeSync();
   setup_MessageHandler();
 
   setup_Maintanance();

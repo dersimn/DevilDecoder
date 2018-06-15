@@ -30,6 +30,14 @@ void hifi_subscribe(String topic, String message) {
     if ( rootObject.containsKey("display") ) {
       irWrite_Display( rootObject["display"].as<bool>() );
     }
+    if ( rootObject.containsKey("volume") ) {
+      float volume_float = rootObject["volume"].as<float>();
+      int8_t volume_int = rescaleOffsetReference(volume_float, 0.0, 1.0, 0.0, -53, 10);
+      if ( inRange( volume_int, -53, 10) ) {
+        Log.info(s+"Sync to "+volume_int);
+        syncVolume(volume_int);
+      }
+    }
   }
 }
 void volume_subscribe(String topic, String message) {
@@ -82,33 +90,27 @@ void publishInputChannel() {
   }
 }
 void publishVolume() {
-  String output;
-  DynamicJsonBuffer jsonBuffer;
-  JsonObject& root = jsonBuffer.createObject();
-
-  // Assume that the lower volume on front channel is the overall reference
-  if (realVolume_channel_valid[1] && realVolume_channel_valid[2]) {
-    int8_t reference;
-    if (realVolume_channel[1] <= realVolume_channel[2]) {
-      reference = realVolume_channel[1]; // Front Left
-    } else {
-      reference = realVolume_channel[2]; // Front Right
+  if (realVolume_reference_valid) {
+    String output;
+    DynamicJsonBuffer jsonBuffer;
+    JsonObject& root = jsonBuffer.createObject();
+    
+    root["val"] = rescaleOffsetReference(realVolume_reference, -53, 10, -53, 0.0, 1.0);
+    
+    if (realVolume_mute_valid) {
+      root["muted"] = realVolume_mute;
     }
-    root["val"] = rescaleOffsetReference(reference, -53, 10, -53, 0.0, 1.0);
-  }
-  if (realVolume_mute_valid) {
-    root["muted"] = realVolume_mute;
-  }
+    
+    JsonObject& channels = root.createNestedObject("channels");
+    if (realVolume_channel_valid[1]) channels["FL"]  = realVolume_channel[1];
+    if (realVolume_channel_valid[2]) channels["FR"]  = realVolume_channel[2];
+    if (realVolume_channel_valid[3]) channels["C"]   = realVolume_channel[3];
+    if (realVolume_channel_valid[4]) channels["SUB"] = realVolume_channel[4];
+    if (realVolume_channel_valid[5]) channels["RL"]  = realVolume_channel[5];
+    if (realVolume_channel_valid[6]) channels["RR"]  = realVolume_channel[6];
   
-  JsonObject& channels = root.createNestedObject("channels");
-  if (realVolume_channel_valid[1]) channels["FL"]  = realVolume_channel[1];
-  if (realVolume_channel_valid[2]) channels["FR"]  = realVolume_channel[2];
-  if (realVolume_channel_valid[3]) channels["C"]   = realVolume_channel[3];
-  if (realVolume_channel_valid[4]) channels["SUB"] = realVolume_channel[4];
-  if (realVolume_channel_valid[5]) channels["RL"]  = realVolume_channel[5];
-  if (realVolume_channel_valid[6]) channels["RR"]  = realVolume_channel[6];
-
-  root.printTo(output);
-  mqtt.publish(s+MQTT_PREFIX+"/status/"+BOARD_ID+"/hifi/volume", output, true);
+    root.printTo(output);
+    mqtt.publish(s+MQTT_PREFIX+"/status/"+BOARD_ID+"/hifi/volume", output, true);
+  }
 }
 

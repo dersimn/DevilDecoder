@@ -17,7 +17,9 @@ void initDefault() {
 void initDefault_PowerOnFunction() {
   irWrite_InputChannel(DEFAULT_CHN);
 
+  delay(50);
+
   // This reads current volume on boot
-  irWrite_VolumeDiff(-1);
+  irWrite_VolumeDiff(-2);
 }
 

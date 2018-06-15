@@ -102,6 +102,16 @@ void volumeReaderThreadFunction(){
   }
   Serial.println();
   */
+
+  // Assume that the lower volume on front channel is the overall reference
+  if (realVolume_channel_valid[1] && realVolume_channel_valid[2]) {
+    if (realVolume_channel[1] <= realVolume_channel[2]) {
+      realVolume_reference = realVolume_channel[1]; // Front Left
+    } else {
+      realVolume_reference = realVolume_channel[2]; // Front Right
+    }
+    realVolume_reference_valid = true;
+  }
   
   publishVolume();
 }
