@@ -3,7 +3,6 @@ ThreadRunOnce displayAutoOffThread = ThreadRunOnce();
 
 void setup_InputReader() {
   attachInterrupt(PWR_LED_IN, handle_pwr_change, CHANGE);
-  attachInterrupt(DISP_LED_IN, displayAutoOff_postpone, RISING);
   attachInterrupt(DISP_LED_IN, handle_display_change, CHANGE);
   handle_pwr_change();
 
@@ -26,6 +25,10 @@ void handle_pwr_change() {
 }
 void handle_display_change() {
   publishDisplayState();
+
+  if (digitalRead(DISP_LED_IN)) {
+    displayAutoOff_postpone();
+  }
 }
 
 void displayAutoOff_postpone() {  
